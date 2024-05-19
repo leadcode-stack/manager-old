@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manager/src/commons/widgets/routing/scaffold_nested_navigation.dart';
+import 'package:manager/src/features/overview/presentation/home_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -20,7 +21,7 @@ final router = GoRouter(
             GoRoute(
               path: '/',
               pageBuilder: (context, state) => const NoTransitionPage(
-                child: Center(child: Text('Home')),
+                child: HomeScreen(),
               ),
             ),
           ],
