@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:manager/src/commons/widgets/routing/scaffold_navigation_rail.dart';
 
 class ScaffoldNavigationBar extends StatelessWidget {
   const ScaffoldNavigationBar({
