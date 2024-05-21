@@ -11,6 +11,8 @@ abstract interface class UserRepository {
   Future<Pagination<User>> getUsers();
 
   Future<User> getUser(int id);
+
+  Future<User> update(int id, Map<String, dynamic> payload);
 }
 
 final class HttpUserRepository implements UserRepository {
@@ -25,15 +27,39 @@ final class HttpUserRepository implements UserRepository {
     final token = preferences.getString('token');
 
     return _client
-        .get(Uri.parse('$baseApiUrl/users'), headers: { 'Authorization': 'Bearer $token' })
+        .get(Uri.parse('$baseApiUrl/users'),
+            headers: {'Authorization': 'Bearer $token'})
         .then((response) => jsonDecode(response.body))
         .then((data) => Pagination.of(data, User.fromJson));
   }
 
   @override
   Future<User> getUser(int id) async {
+    final preferences = _ref.read(sharedPreferencesProvider);
+    final token = preferences.getString('token');
+
     return _client
-        .get(Uri.parse('$baseApiUrl/users/$id'))
+        .get(Uri.parse('$baseApiUrl/users/$id'),
+            headers: {'Authorization': 'Bearer $token'})
+        .then((response) => jsonDecode(response.body))
+        .then((data) => User.fromJson(data));
+  }
+
+  @override
+  Future<User> update(int id, Map<String, dynamic> payload) async {
+    final preferences = _ref.read(sharedPreferencesProvider);
+    final token = preferences.getString('token');
+
+    return _client
+        .put(Uri.parse('$baseApiUrl/users/$id'),
+            body: jsonEncode(payload),
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json'
+            })
+        .catchError((e) {
+          print(e);
+        })
         .then((response) => jsonDecode(response.body))
         .then((data) => User.fromJson(data));
   }

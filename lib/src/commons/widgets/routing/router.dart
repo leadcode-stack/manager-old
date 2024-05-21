@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:manager/src/commons/widgets/app_startup/app_startup.dart';
 import 'package:manager/src/commons/widgets/routing/scaffold_nested_navigation.dart';
 import 'package:manager/src/features/accounts/presentation/screens/account_overview_screen.dart';
+import 'package:manager/src/features/accounts/presentation/screens/user_edit_screen.dart';
 import 'package:manager/src/features/accounts/presentation/screens/users_list_screen.dart';
 import 'package:manager/src/features/authentication/data/models/auth.dart';
 import 'package:manager/src/features/authentication/presentation/login_screen.dart';
@@ -11,7 +12,7 @@ import 'package:manager/src/features/overview/presentation/home_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
-GoRouter createRouter (WidgetRef ref) {
+GoRouter createRouter(WidgetRef ref) {
   final appStartupState = ref.watch(appStartupProvider);
   final auth = ref.watch(authProvider);
 
@@ -48,7 +49,9 @@ GoRouter createRouter (WidgetRef ref) {
         ),
       ),
       StatefulShellRoute.indexedStack(
-        pageBuilder: (context, state, navigationShell) => NoTransitionPage(child: ScaffoldWithNestedNavigation(navigationShell: navigationShell)),
+        pageBuilder: (context, state, navigationShell) => NoTransitionPage(
+            child:
+                ScaffoldWithNestedNavigation(navigationShell: navigationShell)),
         branches: [
           StatefulShellBranch(
             navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'home'),
@@ -69,13 +72,13 @@ GoRouter createRouter (WidgetRef ref) {
                 pageBuilder: (context, state) => const NoTransitionPage(
                   child: AccountOverviewScreen(),
                 ),
-                routes: [
-                  GoRoute(
-                      path: ':id/overview',
-                      pageBuilder: (context, state) => const NoTransitionPage(
-                          child: Center(child: Text('User profil')))),
-                ],
               ),
+              GoRoute(
+                  path: '/accounts/users/:id/overview',
+                  pageBuilder: (context, state) => NoTransitionPage(
+                      child: Center(
+                          child: UsersEditScreen(
+                              id: int.parse(state.pathParameters['id']!))))),
             ],
           ),
         ],

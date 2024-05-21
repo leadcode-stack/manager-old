@@ -21,5 +21,14 @@ final class UserController extends AutoDisposeFamilyAsyncNotifier<User, int> {
   }
 }
 
+// final class UserUpdateController extends AutoDisposeFamilyAsyncNotifier<User, int> {
+//   @override
+//   FutureOr<User> build(int arg) {
+//     final userRepository = ref.read(userRepositoryProvider);
+//     return userRepository.update(this.arg);
+//   }
+// }
+
+
 final usersControllerProvider = AsyncNotifierProvider.autoDispose<UsersController, Pagination<User>>(UsersController.new);
 final userControllerProvider = AsyncNotifierProvider.autoDispose.family<UserController, User, int>(UserController.new);
