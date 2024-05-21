@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manager/src/commons/widgets/dialogs/resource_delete_confirm_dialog.dart';
+import 'package:manager/src/commons/widgets/toasts/error_toast.dart';
+import 'package:manager/src/features/accounts/data/controllers/user_controller.dart';
 import 'package:manager/src/features/accounts/data/models/user.dart';
+import 'package:manager/src/commons/widgets/toasts/success_toast.dart';
 import 'package:manager/src/features/authentication/data/models/auth.dart';
 
 class UserRow extends ConsumerWidget {
@@ -10,7 +13,7 @@ class UserRow extends ConsumerWidget {
 
   const UserRow({required this.user, super.key});
 
-  void handleDelete(context) {
+  void handleDelete(BuildContext context, WidgetRef ref) {
     createResourceDeleteConfirmDialog(
         context: context,
         title: 'Delete user',
@@ -31,8 +34,20 @@ class UserRow extends ConsumerWidget {
             )
           ],
         ),
-        onPressed: () {
-          print('cc');
+        onPressed: () async {
+          await ref.read(userDeleteControllerProvider.notifier).deleteUser(user.id);
+          ref.watch(userUpdateControllerProvider).when(
+              data: (_) => createSuccessToast(
+                    context,
+                    label: 'Success',
+                    description: 'User has been deleted successfully.',
+                  ),
+              error: (error, stack) => createErrorToast(
+                    context,
+                    label: 'Error',
+                    description: 'An error occurred while deleting the user.',
+                  ),
+              loading: () => {});
         });
   }
 
@@ -84,7 +99,7 @@ class UserRow extends ConsumerWidget {
           ),
           if (user.id != auth.user?.id)
             PopupMenuItem(
-              onTap: () => handleDelete(context),
+              onTap: () => handleDelete(context, ref),
               child: const Row(
                 children: [
                   Icon(Icons.delete, color: Colors.red),

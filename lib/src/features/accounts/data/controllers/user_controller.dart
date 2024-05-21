@@ -21,14 +21,43 @@ final class UserController extends AutoDisposeFamilyAsyncNotifier<User, int> {
   }
 }
 
-// final class UserUpdateController extends AutoDisposeFamilyAsyncNotifier<User, int> {
-//   @override
-//   FutureOr<User> build(int arg) {
-//     final userRepository = ref.read(userRepositoryProvider);
-//     return userRepository.update(this.arg);
-//   }
-// }
+final class UserUpdateController extends AsyncNotifier<void> {
+  @override
+  FutureOr<void> build() async {}
 
+  Future<void> updateUser(int id, Map<String, dynamic> payload) async {
+    final userRepository = ref.read(userRepositoryProvider);
 
-final usersControllerProvider = AsyncNotifierProvider.autoDispose<UsersController, Pagination<User>>(UsersController.new);
-final userControllerProvider = AsyncNotifierProvider.autoDispose.family<UserController, User, int>(UserController.new);
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () => userRepository.update(id, payload),
+    );
+  }
+}
+
+final class UserDeleteController extends AsyncNotifier<void> {
+  @override
+  FutureOr<void> build() async {}
+
+  FutureOr<void> deleteUser(int id) async {
+    final userRepository = ref.read(userRepositoryProvider);
+
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () => userRepository.delete(id),
+    );
+  }
+}
+
+final usersControllerProvider =
+    AsyncNotifierProvider.autoDispose<UsersController, Pagination<User>>(
+        UsersController.new);
+
+final userControllerProvider = AsyncNotifierProvider.autoDispose
+    .family<UserController, User, int>(UserController.new);
+
+final userUpdateControllerProvider =
+    AsyncNotifierProvider<UserUpdateController, void>(UserUpdateController.new);
+
+final userDeleteControllerProvider =
+    AsyncNotifierProvider<UserDeleteController, void>(UserDeleteController.new);

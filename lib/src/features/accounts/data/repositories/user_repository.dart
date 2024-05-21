@@ -13,6 +13,8 @@ abstract interface class UserRepository {
   Future<User> getUser(int id);
 
   Future<User> update(int id, Map<String, dynamic> payload);
+
+  Future<void> delete(int id);
 }
 
 final class HttpUserRepository implements UserRepository {
@@ -28,7 +30,7 @@ final class HttpUserRepository implements UserRepository {
 
     return _client
         .get(Uri.parse('$baseApiUrl/users'),
-            headers: {'Authorization': 'Bearer $token'})
+        headers: {'Authorization': 'Bearer $token'})
         .then((response) => jsonDecode(response.body))
         .then((data) => Pagination.of(data, User.fromJson));
   }
@@ -40,7 +42,7 @@ final class HttpUserRepository implements UserRepository {
 
     return _client
         .get(Uri.parse('$baseApiUrl/users/$id'),
-            headers: {'Authorization': 'Bearer $token'})
+        headers: {'Authorization': 'Bearer $token'})
         .then((response) => jsonDecode(response.body))
         .then((data) => User.fromJson(data));
   }
@@ -52,13 +54,23 @@ final class HttpUserRepository implements UserRepository {
 
     return _client
         .put(Uri.parse('$baseApiUrl/users/$id'),
-            body: jsonEncode(payload),
-            headers: {
-              'Authorization': 'Bearer $token',
-              'Content-Type': 'application/json'
-            })
+        body: jsonEncode(payload),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json'
+        })
         .then((response) => jsonDecode(response.body))
         .then((data) => User.fromJson(data));
+  }
+
+  @override
+  Future<void> delete(int id) async {
+    final preferences = _ref.read(sharedPreferencesProvider);
+    final token = preferences.getString('token');
+
+    await _client
+        .delete(Uri.parse('$baseApiUrl/users/$id'),
+        headers: {'Authorization': 'Bearer $token'});
   }
 }
 
