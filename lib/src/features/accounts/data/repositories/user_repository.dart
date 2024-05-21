@@ -57,9 +57,6 @@ final class HttpUserRepository implements UserRepository {
               'Authorization': 'Bearer $token',
               'Content-Type': 'application/json'
             })
-        .catchError((e) {
-          print(e);
-        })
         .then((response) => jsonDecode(response.body))
         .then((data) => User.fromJson(data));
   }

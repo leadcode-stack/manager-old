@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manager/src/commons/widgets/routing/router.dart';
 
+
 class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 

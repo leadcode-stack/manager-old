@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manager/src/commons/widgets/form/input_control.dart';
+import 'package:manager/src/commons/widgets/toasts/error_toast.dart';
+import 'package:manager/src/commons/widgets/toasts/success_toast.dart';
 import 'package:manager/src/features/accounts/data/models/user.dart';
 import 'package:manager/src/features/accounts/data/repositories/user_repository.dart';
 import 'package:manager/src/features/accounts/data/validators/user_validators.dart';
@@ -39,11 +43,28 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
             if (_formKey.currentState!.validate()) {
               _formKey.currentState!.save();
 
-              await userRepository.update(widget.user.id, {
-                'firstname': _firstName,
-                'lastname': _lastName,
-                'email': _email
-              });
+              try {
+                await userRepository.update(widget.user.id, {
+                  'firstname': _firstName,
+                  'lastname': _lastName,
+                  'email': _email
+                });
+
+                if (context.mounted) {
+                  createSuccessToast(context,
+                    label: 'Success',
+                    description: 'User has been updated successfully.',
+                  );
+                }
+
+              } on HttpException catch(err) {
+                if (context.mounted) {
+                  createErrorToast(context,
+                    label: 'Error',
+                    description: err.message,
+                  );
+                }
+              }
             }
           },
           backgroundColor: Colors.blue.shade300,
