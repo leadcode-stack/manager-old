@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manager/src/commons/widgets/app_startup/app_startup.dart';
 import 'package:manager/src/commons/widgets/routing/scaffold_nested_navigation.dart';
+import 'package:manager/src/features/accounts/presentation/screens/account_overview_screen.dart';
+import 'package:manager/src/features/accounts/presentation/screens/users_list_screen.dart';
 import 'package:manager/src/features/authentication/data/models/auth.dart';
 import 'package:manager/src/features/authentication/presentation/login_screen.dart';
 import 'package:manager/src/features/overview/presentation/home_screen.dart';
@@ -22,14 +24,13 @@ GoRouter createRouter (WidgetRef ref) {
         return '/startup';
       }
 
-      if (!auth.isLoggedIn && state.fullPath != '/authentication/login') {
-        return '/authentication/login';
-      }
-
       if (auth.isLoggedIn && state.fullPath == '/authentication/login') {
         return '/';
       }
 
+      if (!auth.isLoggedIn && state.fullPath != '/authentication/login') {
+        return '/authentication/login';
+      }
 
       return null;
     },
@@ -66,13 +67,7 @@ GoRouter createRouter (WidgetRef ref) {
               GoRoute(
                 path: '/accounts/overview',
                 pageBuilder: (context, state) => const NoTransitionPage(
-                  child: Center(child: Text('Account Overview')),
-                ),
-              ),
-              GoRoute(
-                path: '/accounts/users',
-                pageBuilder: (context, state) => const NoTransitionPage(
-                  child: Center(child: Text('Users Overview')),
+                  child: AccountOverviewScreen(),
                 ),
                 routes: [
                   GoRoute(

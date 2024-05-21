@@ -1,3 +1,5 @@
+import 'package:manager/src/features/accounts/data/models/role.dart';
+
 final class User {
   final int id;
   final String firstname;
@@ -5,6 +7,8 @@ final class User {
   final String email;
   final DateTime createdAt;
   final DateTime? updatedAt;
+
+  final List<Role> roles;
 
   String get username => '$firstname $lastname';
 
@@ -14,7 +18,8 @@ final class User {
     required this.lastname,
     required this.email,
     required this.createdAt,
-    this.updatedAt,
+    required this.updatedAt,
+    required this.roles,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -27,6 +32,11 @@ final class User {
       updatedAt: json['updatedAt'] != null
           ? DateTime.parse(json['updatedAt'] as String)
           : null,
+      roles: json['roles'] != null
+        ? List.from(json['roles'])
+            .map<Role>((role) => Role.fromJson(role))
+            .toList()
+        : [],
     );
   }
 }
