@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manager/src/commons/widgets/dialogs/resource_delete_confirm_dialog.dart';
 import 'package:manager/src/features/accounts/data/models/user.dart';
+import 'package:manager/src/features/authentication/data/models/auth.dart';
 
-class UserRow extends StatelessWidget {
+class UserRow extends ConsumerWidget {
   final User user;
 
   const UserRow({required this.user, super.key});
@@ -35,7 +37,9 @@ class UserRow extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final auth = ref.watch(authProvider);
+
     return ListTile(
       title: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
         Text('${user.firstname} ${user.lastname}'),
@@ -50,7 +54,8 @@ class UserRow extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(role.name,
-                        style: const TextStyle(color: Colors.blue, fontSize: 12.0))))
+                        style: const TextStyle(
+                            color: Colors.blue, fontSize: 12.0))))
                 .toList()),
       ]),
       subtitle: Text(user.email,
@@ -77,16 +82,17 @@ class UserRow extends StatelessWidget {
               ],
             ),
           ),
-          PopupMenuItem(
-            onTap: () => handleDelete(context),
-            child: const Row(
-              children: [
-                Icon(Icons.delete, color: Colors.red),
-                SizedBox(width: 8),
-                Text('Delete'),
-              ],
+          if (user.id != auth.user?.id)
+            PopupMenuItem(
+              onTap: () => handleDelete(context),
+              child: const Row(
+                children: [
+                  Icon(Icons.delete, color: Colors.red),
+                  SizedBox(width: 8),
+                  Text('Delete'),
+                ],
+              ),
             ),
-          ),
         ],
       ),
     );
