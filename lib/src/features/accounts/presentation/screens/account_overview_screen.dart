@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:manager/src/commons/widgets/resource_bars/overview_app_bar.dart';
+import 'package:manager/src/features/accounts/presentation/screens/roles_list_screen.dart';
 import 'package:manager/src/features/accounts/presentation/screens/users_list_screen.dart';
 
 class AccountOverviewScreen extends StatefulWidget {
@@ -53,9 +54,7 @@ class _AccountOverviewScreenState extends State<AccountOverviewScreen>
               Expanded(
                 child: TabBarView(controller: _tabController, children: const [
                   UsersListScreen(),
-                  Center(
-                    child: Text('CC 2'),
-                  ),
+                  RolesListScreen(),
                 ]),
               ),
             ],
