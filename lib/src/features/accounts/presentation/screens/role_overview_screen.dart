@@ -35,10 +35,10 @@ class _RoleOverviewScreenState extends ConsumerState<RoleOverviewScreen>
                 const Text('Discover and manage user, roles and sessions.'),
           ),
           body: DefaultTabController(
-            initialIndex: switch(GoRouterState.of(context).path) {
-              final path when path!.startsWith('/accounts/roles/${role.id}/overview') => 0,
-              final path when path!.startsWith('/accounts/roles/${role.id}/permissions') => 1,
-              final path when path!.startsWith('/accounts/roles/${role.id}/danger-zone') => 2,
+            initialIndex: switch(GoRouterState.of(context).matchedLocation) {
+              final path when path.startsWith('/accounts/roles/${role.id}/overview') => 0,
+              final path when path.startsWith('/accounts/roles/${role.id}/permissions') => 1,
+              final path when path.startsWith('/accounts/roles/${role.id}/danger-zone') => 2,
               _ => 0,
             },
             length: 3,
