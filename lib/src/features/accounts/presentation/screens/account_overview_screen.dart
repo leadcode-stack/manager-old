@@ -30,6 +30,13 @@ class _AccountOverviewScreenState extends State<AccountOverviewScreen>
 
   @override
   Widget build(BuildContext context) {
+    final location = GoRouterState.of(context).path;
+    _tabController.index = switch (location) {
+      final location when location!.startsWith('/accounts/users') => 0,
+      final location when location!.startsWith('/accounts/roles') => 1,
+      _ => 0,
+    };
+
     return Scaffold(
       appBar: const OverviewAppBar(
         title: 'Accounts',
@@ -62,7 +69,7 @@ class _AccountOverviewScreenState extends State<AccountOverviewScreen>
               Expanded(
                 child: TabBarView(controller: _tabController, children: const [
                   UsersListScreen(),
-                  RolesListScreen(),
+                  RolesListScreen()
                 ]),
               ),
             ],
