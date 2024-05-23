@@ -1,128 +1,89 @@
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:manager/src/commons/widgets/form/input_color.dart';
-import 'package:manager/src/commons/widgets/form/input_control.dart';
-import 'package:manager/src/commons/widgets/toasts/error_toast.dart';
-import 'package:manager/src/commons/widgets/toasts/success_toast.dart';
+import 'package:go_router/go_router.dart';
+import 'package:manager/src/commons/widgets/resource_bars/overview_app_bar.dart';
 import 'package:manager/src/features/accounts/data/models/role.dart';
 import 'package:manager/src/features/accounts/domain/controllers/role_controller.dart';
+import 'package:manager/src/features/accounts/presentation/screens/role_edit_screen.dart';
 
 final class RoleOverviewScreen extends ConsumerStatefulWidget {
-  final Role role;
+  final int id;
 
-  const RoleOverviewScreen({required this.role, super.key});
+  const RoleOverviewScreen({required this.id, super.key});
 
   @override
   ConsumerState<RoleOverviewScreen> createState() => _RoleOverviewScreenState();
 }
 
-class _RoleOverviewScreenState extends ConsumerState<RoleOverviewScreen> {
-  final _formKey = GlobalKey<FormState>();
-  late String _name;
-  late String? _description;
-  late String _textColor;
-  late String _backgroundColor;
-
-  @override
-  void initState() {
-    super.initState();
-    _name = widget.role.name;
-    _description = widget.role.description;
-    _textColor = widget.role.textColor;
-    _backgroundColor = widget.role.backgroundColor;
-  }
+class _RoleOverviewScreenState extends ConsumerState<RoleOverviewScreen>
+    with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            if (_formKey.currentState!.validate()) {
-              _formKey.currentState!.save();
+    final state = ref.watch(roleControllerProvider(widget.id));
 
-              await ref
-                  .read(roleUpdateControllerProvider.notifier)
-                  .updateRole(widget.role.id, {
-                'name': _name,
-                'description': _description,
-                'textColor': _textColor,
-                'backgroundColor': _backgroundColor
-              });
-
-              ref.watch(roleUpdateControllerProvider).when(
-                  loading: () => {},
-                  error: (error, stack) {
-                    createErrorToast(
-                      context,
-                      label: 'Error',
-                      description: 'An error occurred while updating the role.',
-                    );
-                  },
-                  data: (_) {
-                    createSuccessToast(
-                      context,
-                      label: 'Success',
-                      description: 'Role has been updated successfully.',
-                    );
-                  });
-            }
-          },
-          backgroundColor: Colors.blue.shade300,
-          child: const Icon(Icons.save, color: Colors.white)),
-      body: Container(
-          color: Colors.grey.shade200,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8, top: 8, right: 8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                      padding: const EdgeInsets.all(16),
-                      height: double.infinity,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.grey.shade200),
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(8),
-                              topRight: Radius.circular(8))),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text('Identity',
-                                style: Theme.of(context).textTheme.titleMedium),
-                            const SizedBox(height: 20.0),
-                            InputControl(
-                                formKey: _formKey,
-                                label: 'Name',
-                                initialValue: widget.role.name,
-                                onSaved: (value) => _name = value!),
-                            const SizedBox(height: 8.0),
-                            InputControl(
-                                formKey: _formKey,
-                                label: 'Description',
-                                initialValue: widget.role.description,
-                                onSaved: (value) => _description = value!),
-                            const SizedBox(height: 8.0),
-                            InputColor(
-                              label: 'Text color',
-                              initialValue: _textColor,
-                              onChange: (color) => _textColor = color.hexAlpha,
-                            ),
-                            const SizedBox(height: 8.0),
-                            InputColor(
-                              label: 'Background color',
-                              initialValue: _backgroundColor,
-                              onChange: (color) => _backgroundColor = color.hexAlpha,
-                            ),
-                          ],
+    print('loc : ${GoRouterState.of(context).path}');
+    return state.when(
+      error: (e, _) => Center(child: Text(e.toString())),
+      loading: () => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      data: (Role role) => Scaffold(
+          appBar: OverviewAppBar(
+            title: role.name,
+            description:
+                const Text('Discover and manage user, roles and sessions.'),
+          ),
+          body: DefaultTabController(
+            initialIndex: switch(GoRouterState.of(context).path) {
+              final path when path!.startsWith('/accounts/roles/${role.id}/overview') => 0,
+              final path when path!.startsWith('/accounts/roles/${role.id}/permissions') => 1,
+              final path when path!.startsWith('/accounts/roles/${role.id}/danger-zone') => 2,
+              _ => 0,
+            },
+            length: 3,
+            child: Container(
+                color: Colors.grey.shade200,
+                child: Column(
+                  children: [
+                    Container(
+                      color: Colors.white,
+                      child: TabBar(
+                          isScrollable: true,
+                          labelColor: Colors.blue.shade400,
+                          indicatorColor: Colors.blue.shade400,
+                          dividerColor: Colors.grey.shade200,
+                          onTap: (index) {
+                            return switch (index) {
+                              0 => context.go('/accounts/roles/${role.id}/overview'),
+                              1 => context.go('/accounts/roles/${role.id}/permissions'),
+                              2 => context.go('/accounts/roles/${role.id}/danger-zone'),
+                              _ => 0,
+                            };
+                          },
+                          tabs: const [
+                            Tab(text: 'Overview'),
+                            Tab(text: 'Permissions'),
+                            Tab(
+                                child: Text(
+                              'Danger zone',
+                              style: TextStyle(color: Colors.red),
+                            )),
+                          ]),
+                    ),
+                    Expanded(
+                      child: TabBarView(children: [
+                        RoleEditScreen(role: role),
+                        const Center(
+                          child: Text('Edit permission'),
                         ),
-                      )),
-                ),
-              ],
-            ),
+                        const Center(
+                          child: Text('Danger zone'),
+                        ),
+                      ]),
+                    ),
+                  ],
+                )),
           )),
     );
   }
