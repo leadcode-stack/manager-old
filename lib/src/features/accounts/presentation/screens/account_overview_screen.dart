@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:manager/src/commons/widgets/resource_bars/overview_app_bar.dart';
 import 'package:manager/src/features/accounts/presentation/screens/roles_list_screen.dart';
 import 'package:manager/src/features/accounts/presentation/screens/users_list_screen.dart';
@@ -46,6 +47,13 @@ class _AccountOverviewScreenState extends State<AccountOverviewScreen>
                     labelColor: Colors.blue.shade400,
                     indicatorColor: Colors.blue.shade400,
                     dividerColor: Colors.grey.shade200,
+                    onTap: (index) {
+                      return switch (index) {
+                        0 => context.go('/accounts/users'),
+                        1 => context.go('/accounts/roles'),
+                        _ => null,
+                      };
+                    },
                     tabs: const [
                       Tab(text: 'Members'),
                       Tab(text: 'Roles'),

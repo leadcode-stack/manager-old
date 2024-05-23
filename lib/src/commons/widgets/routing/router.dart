@@ -5,7 +5,6 @@ import 'package:manager/src/commons/widgets/app_startup/app_startup.dart';
 import 'package:manager/src/commons/widgets/routing/scaffold_nested_navigation.dart';
 import 'package:manager/src/features/accounts/presentation/screens/account_overview_screen.dart';
 import 'package:manager/src/features/accounts/presentation/screens/user_edit_screen.dart';
-import 'package:manager/src/features/accounts/presentation/screens/users_list_screen.dart';
 import 'package:manager/src/features/authentication/data/models/auth.dart';
 import 'package:manager/src/features/authentication/presentation/login_screen.dart';
 import 'package:manager/src/features/overview/presentation/home_screen.dart';
@@ -68,17 +67,26 @@ GoRouter createRouter(WidgetRef ref) {
             navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'accounts'),
             routes: [
               GoRoute(
-                path: '/accounts/overview',
+                path: '/accounts/users',
+                pageBuilder: (context, state) => const NoTransitionPage(
+                  child: AccountOverviewScreen(),
+                ),
+                routes: [
+                  GoRoute(
+                    path: ':id/overview',
+                    pageBuilder: (context, state) => NoTransitionPage(
+                        child: Center(
+                            child: UsersEditScreen(
+                                id: int.parse(state.pathParameters['id']!)))),
+                  )
+                ]
+              ),
+              GoRoute(
+                path: '/accounts/roles',
                 pageBuilder: (context, state) => const NoTransitionPage(
                   child: AccountOverviewScreen(),
                 ),
               ),
-              GoRoute(
-                  path: '/accounts/users/:id/overview',
-                  pageBuilder: (context, state) => NoTransitionPage(
-                      child: Center(
-                          child: UsersEditScreen(
-                              id: int.parse(state.pathParameters['id']!))))),
             ],
           ),
         ],
