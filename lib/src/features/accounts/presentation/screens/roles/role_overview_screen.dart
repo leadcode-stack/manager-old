@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:manager/src/commons/widgets/resource_bars/overview_app_bar.dart';
 import 'package:manager/src/features/accounts/data/models/role.dart';
 import 'package:manager/src/features/accounts/domain/controllers/role_controller.dart';
-import 'package:manager/src/features/accounts/presentation/screens/role_edit_screen.dart';
+import 'package:manager/src/features/accounts/presentation/screens/roles/role_edit_screen.dart';
 
 final class RoleOverviewScreen extends ConsumerStatefulWidget {
   final int id;

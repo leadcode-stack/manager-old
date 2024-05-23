@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:manager/src/commons/widgets/resource_bars/overview_app_bar.dart';
 import 'package:manager/src/features/accounts/domain/controllers/user_controller.dart';
 import 'package:manager/src/features/accounts/data/models/user.dart';
-import 'package:manager/src/features/accounts/presentation/screens/user_profile_screen.dart';
+import 'package:manager/src/features/accounts/presentation/screens/users/user_profile_screen.dart';
 import 'package:manager/src/features/authentication/data/models/auth.dart';
 
 final class UserOverviewScreen extends ConsumerStatefulWidget {
