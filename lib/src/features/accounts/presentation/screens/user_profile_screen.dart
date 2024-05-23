@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manager/src/commons/widgets/form/input_control.dart';
 import 'package:manager/src/commons/widgets/toasts/error_toast.dart';
 import 'package:manager/src/commons/widgets/toasts/success_toast.dart';
-import 'package:manager/src/features/accounts/data/controllers/user_controller.dart';
+import 'package:manager/src/features/accounts/domains/controllers/user_controller.dart';
 import 'package:manager/src/features/accounts/data/models/user.dart';
-import 'package:manager/src/features/accounts/data/validators/user_validators.dart';
+import 'package:manager/src/features/accounts/domains/validators/user_validators.dart';
 
 final class UserProfileScreen extends ConsumerStatefulWidget {
   final User user;

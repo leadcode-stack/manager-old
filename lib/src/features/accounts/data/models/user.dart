@@ -33,10 +33,10 @@ final class User {
           ? DateTime.parse(json['updatedAt'] as String)
           : null,
       roles: json['roles'] != null
-        ? List.from(json['roles'])
-            .map<Role>((role) => Role.fromJson(role))
-            .toList()
-        : [],
+          ? List.from(json['roles'])
+          .map<Role>((role) => Role.fromJson(role))
+          .toList()
+          : [],
     );
   }
 }

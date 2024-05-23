@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manager/src/commons/widgets/resource_bars/overview_app_bar.dart';
-import 'package:manager/src/features/accounts/data/controllers/user_controller.dart';
+import 'package:manager/src/features/accounts/domains/controllers/user_controller.dart';
 import 'package:manager/src/features/accounts/data/models/user.dart';
 import 'package:manager/src/features/accounts/presentation/screens/user_profile_screen.dart';
 import 'package:manager/src/features/authentication/data/models/auth.dart';
