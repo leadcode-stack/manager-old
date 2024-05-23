@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manager/src/commons/utils/pagination.dart';
-import 'package:manager/src/features/accounts/domains/controllers/user_controller.dart';
+import 'package:manager/src/features/accounts/domain/controllers/user_controller.dart';
 import 'package:manager/src/features/accounts/data/models/user.dart';
 import 'package:manager/src/features/accounts/presentation/widgets/user_row.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manager/src/commons/widgets/dialogs/resource_delete_confirm_dialog.dart';
 import 'package:manager/src/commons/widgets/toasts/error_toast.dart';
-import 'package:manager/src/features/accounts/domains/controllers/role_controller.dart';
+import 'package:manager/src/features/accounts/domain/controllers/role_controller.dart';
 import 'package:manager/src/commons/widgets/toasts/success_toast.dart';
 import 'package:manager/src/features/accounts/data/models/role.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manager/src/app.dart';
 import 'package:manager/src/commons/widgets/app_startup/app_startup_error.dart';
 import 'package:manager/src/commons/widgets/app_startup/app_startup_loading.dart';
-import 'package:manager/src/features/authentication/domains/controllers/auth_controller.dart';
+import 'package:manager/src/features/authentication/domain/controllers/auth_controller.dart';
 
 class AppStartup extends ConsumerStatefulWidget {
   const AppStartup({super.key});
