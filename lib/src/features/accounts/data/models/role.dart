@@ -28,7 +28,7 @@ final class Role {
         description: json['description'],
         textColor: json['textColor'],
         backgroundColor: json['backgroundColor'],
-        createdAt: json['updatedAt'] != null ? DateTime.parse(json['createdAt']) : null,
+        createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
         updatedAt: json['updatedAt'] != null
             ? DateTime.parse(json['updatedAt'])
             : null,

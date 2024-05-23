@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:manager/src/commons/widgets/app_startup/app_startup.dart';
 import 'package:manager/src/commons/widgets/routing/scaffold_nested_navigation.dart';
 import 'package:manager/src/features/accounts/presentation/screens/account_overview_screen.dart';
+import 'package:manager/src/features/accounts/presentation/screens/role_edit_screen.dart';
 import 'package:manager/src/features/accounts/presentation/screens/user_edit_screen.dart';
 import 'package:manager/src/features/authentication/data/models/auth.dart';
 import 'package:manager/src/features/authentication/presentation/login_screen.dart';
@@ -86,6 +87,15 @@ GoRouter createRouter(WidgetRef ref) {
                 pageBuilder: (context, state) => const NoTransitionPage(
                   child: AccountOverviewScreen(),
                 ),
+                  routes: [
+                    GoRoute(
+                      path: ':id/overview',
+                      pageBuilder: (context, state) => NoTransitionPage(
+                          child: Center(
+                              child: RoleEditScreen(
+                                  id: int.parse(state.pathParameters['id']!)))),
+                    )
+                  ]
               ),
             ],
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:manager/src/commons/utils/color.dart';
 import 'package:manager/src/commons/widgets/dialogs/resource_delete_confirm_dialog.dart';
 import 'package:manager/src/commons/widgets/toasts/error_toast.dart';
 import 'package:manager/src/features/accounts/domain/controllers/user_controller.dart';
@@ -35,7 +36,9 @@ class UserRow extends ConsumerWidget {
           ],
         ),
         onPressed: () async {
-          await ref.read(userDeleteControllerProvider.notifier).deleteUser(user.id);
+          await ref
+              .read(userDeleteControllerProvider.notifier)
+              .deleteUser(user.id);
           ref.watch(userUpdateControllerProvider).when(
               data: (_) => createSuccessToast(
                     context,
@@ -65,12 +68,13 @@ class UserRow extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     margin: const EdgeInsets.only(right: 4),
                     decoration: BoxDecoration(
-                      color: Colors.blue.shade100,
+                      color: stringToColor(role.backgroundColor),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(role.name,
-                        style: const TextStyle(
-                            color: Colors.blue, fontSize: 12.0))))
+                        style: TextStyle(
+                            color: stringToColor(role.textColor),
+                            fontSize: 12.0))))
                 .toList()),
       ]),
       subtitle: Text(user.email,

@@ -36,6 +36,7 @@ class RoleRow extends ConsumerWidget {
           await ref
               .read(roleDeleteControllerProvider.notifier)
               .deleteRole(role.id);
+
           ref.watch(roleUpdateControllerProvider).when(
               data: (_) => createSuccessToast(
                     context,
@@ -56,6 +57,24 @@ class RoleRow extends ConsumerWidget {
     return ListTile(
       title: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
         Text(role.name),
+        const SizedBox(width: 10),
+        Container(
+          width: 15.0,
+          height: 15.0,
+          decoration: BoxDecoration(
+            color: Color(int.parse('0xFF${role.textColor.replaceFirst('#', '')}')),
+            shape: BoxShape.circle,
+          ),
+        ),
+        const SizedBox(width: 5),
+        Container(
+          width: 15.0,
+          height: 15.0,
+          decoration: BoxDecoration(
+            color: Color(int.parse('0xFF${role.backgroundColor.replaceFirst('#', '')}')),
+            shape: BoxShape.circle,
+          ),
+        ),
       ]),
       subtitle: Text('${role.permissions.length} permissions',
           style: const TextStyle(color: Colors.grey, fontSize: 12.0)),
