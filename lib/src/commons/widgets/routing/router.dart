@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:manager/src/commons/widgets/app_startup/app_startup.dart';
 import 'package:manager/src/commons/widgets/routing/scaffold_nested_navigation.dart';
+import 'package:manager/src/constants/routes.dart';
 import 'package:manager/src/features/accounts/presentation/screens/account_overview_screen.dart';
 import 'package:manager/src/features/accounts/presentation/screens/role_overview_screen.dart';
 import 'package:manager/src/features/accounts/presentation/screens/user_overview_screen.dart';
@@ -73,18 +74,13 @@ GoRouter createRouter(WidgetRef ref) {
                         child: AccountOverviewScreen(),
                       ),
                   routes: [
-                    GoRoute(
-                      path: ':id/overview',
-                      pageBuilder: (context, state) => NoTransitionPage(
-                          child: UserOverviewScreen(
-                              id: int.parse(state.pathParameters['id']!))),
-                    ),
-                    GoRoute(
-                      path: ':id/roles',
-                      pageBuilder: (context, state) => NoTransitionPage(
-                          child: UserOverviewScreen(
-                              id: int.parse(state.pathParameters['id']!))),
-                    )
+                    for (final location in userOverviewLinks)
+                      GoRoute(
+                        path: ':id/$location',
+                        pageBuilder: (context, state) => NoTransitionPage(
+                            child: UserOverviewScreen(
+                                id: int.parse(state.pathParameters['id']!))),
+                      ),
                   ]),
               GoRoute(
                   path: '/accounts/roles',
@@ -92,18 +88,13 @@ GoRouter createRouter(WidgetRef ref) {
                         child: AccountOverviewScreen(),
                       ),
                   routes: [
-                    GoRoute(
-                      path: ':id/overview',
-                      pageBuilder: (context, state) => NoTransitionPage(
-                          child: RoleOverviewScreen(
-                              id: int.parse(state.pathParameters['id']!))),
-                    ),
-                    GoRoute(
-                      path: ':id/permissions',
-                      pageBuilder: (context, state) => NoTransitionPage(
-                          child: RoleOverviewScreen(
-                              id: int.parse(state.pathParameters['id']!))),
-                    )
+                    for (final location in roleOverviewLinks)
+                      GoRoute(
+                        path: ':id/$location',
+                        pageBuilder: (context, state) => NoTransitionPage(
+                            child: RoleOverviewScreen(
+                                id: int.parse(state.pathParameters['id']!))),
+                      ),
                   ]),
             ],
           ),
