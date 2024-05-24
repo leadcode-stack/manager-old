@@ -37,17 +37,22 @@ class RoleRow extends ConsumerWidget {
               .read(roleDeleteControllerProvider.notifier)
               .deleteRole(role.id);
 
-          ref.watch(roleUpdateControllerProvider).when(
-              data: (_) => createSuccessToast(
-                    context,
-                    label: 'Success',
-                    description: 'User has been deleted successfully.',
-                  ),
-              error: (error, stack) => createErrorToast(
-                    context,
-                    label: 'Error',
-                    description: 'An error occurred while deleting the role.',
-                  ),
+          ref.watch(roleDeleteControllerProvider).when(
+              data: (_) {
+                ref.invalidate(rolesControllerProvider);
+                createSuccessToast(
+                  context,
+                  label: 'Success',
+                  description: 'Role has been deleted successfully.',
+                );
+              },
+              error: (error, stack) {
+                createErrorToast(
+                  context,
+                  label: 'Error',
+                  description: 'An error occurred while deleting the role.',
+                );
+              },
               loading: () => {});
         });
   }
@@ -62,7 +67,8 @@ class RoleRow extends ConsumerWidget {
           width: 15.0,
           height: 15.0,
           decoration: BoxDecoration(
-            color: Color(int.parse('0xFF${role.textColor.replaceFirst('#', '')}')),
+            color:
+            Color(int.parse('0xFF${role.textColor.replaceFirst('#', '')}')),
             shape: BoxShape.circle,
           ),
         ),
@@ -71,7 +77,8 @@ class RoleRow extends ConsumerWidget {
           width: 15.0,
           height: 15.0,
           decoration: BoxDecoration(
-            color: Color(int.parse('0xFF${role.backgroundColor.replaceFirst('#', '')}')),
+            color: Color(
+                int.parse('0xFF${role.backgroundColor.replaceFirst('#', '')}')),
             shape: BoxShape.circle,
           ),
         ),
@@ -82,7 +89,8 @@ class RoleRow extends ConsumerWidget {
         tooltip: '',
         color: Colors.white,
         icon: const Icon(Icons.more_vert),
-        itemBuilder: (context) => [
+        itemBuilder: (context) =>
+        [
           PopupMenuItem(
             onTap: () => context.go('/accounts/roles/${role.id}/overview'),
             child: const Row(
@@ -90,6 +98,16 @@ class RoleRow extends ConsumerWidget {
                 Icon(Icons.edit),
                 SizedBox(width: 8),
                 Text('Edit'),
+              ],
+            ),
+          ),
+          PopupMenuItem(
+            onTap: () => handleDelete(context, ref),
+            child: const Row(
+              children: [
+                Icon(Icons.delete, color: Colors.red),
+                SizedBox(width: 8),
+                Text('Delete'),
               ],
             ),
           ),
