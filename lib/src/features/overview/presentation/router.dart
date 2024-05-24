@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:manager/src/features/overview/presentation/home_screen.dart';
+import 'package:manager/src/features/overview/presentation/screens/home_screen.dart';
 
 final StatefulShellBranch router = StatefulShellBranch(
   navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'home'),
