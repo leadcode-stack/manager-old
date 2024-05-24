@@ -12,6 +12,8 @@ abstract interface class RoleRepository {
 
   Future<Role> getRole(int id);
 
+  Future<Role> create(Map<String, dynamic> payload);
+
   Future<Role> update(int id, Map<String, dynamic> payload);
 
   Future<void> delete(int id);
@@ -43,6 +45,22 @@ final class HttpRoleRepository implements RoleRepository {
     return _client
         .get(Uri.parse('$baseApiUrl/roles/$id'),
             headers: {'Authorization': 'Bearer $token'})
+        .then((response) => jsonDecode(response.body))
+        .then((data) => Role.fromJson(data));
+  }
+
+  @override
+  Future<Role> create(Map<String, dynamic> payload) async {
+    final preferences = _ref.read(sharedPreferencesProvider);
+    final token = preferences.getString('token');
+
+    return _client
+        .post(Uri.parse('$baseApiUrl/roles'),
+            body: jsonEncode(payload),
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json'
+            })
         .then((response) => jsonDecode(response.body))
         .then((data) => Role.fromJson(data));
   }

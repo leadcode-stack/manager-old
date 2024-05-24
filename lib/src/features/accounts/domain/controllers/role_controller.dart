@@ -21,6 +21,20 @@ final class RoleController extends AutoDisposeFamilyAsyncNotifier<Role, int> {
   }
 }
 
+final class RoleCreateController extends AsyncNotifier<void> {
+  @override
+  FutureOr<void> build() async {}
+
+  Future<void> createRole(Map<String, dynamic> payload) async {
+    final roleRepository = ref.read(roleRepositoryProvider);
+
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+          () => roleRepository.create(payload),
+    );
+  }
+}
+
 final class RoleUpdateController extends AsyncNotifier<void> {
   @override
   FutureOr<void> build() async {}
@@ -55,6 +69,9 @@ final rolesControllerProvider =
 
 final roleControllerProvider = AsyncNotifierProvider.autoDispose
     .family<RoleController, Role, int>(RoleController.new);
+
+final roleStoreControllerProvider =
+AsyncNotifierProvider<RoleCreateController, void>(RoleCreateController.new);
 
 final roleUpdateControllerProvider =
     AsyncNotifierProvider<RoleUpdateController, void>(RoleUpdateController.new);
