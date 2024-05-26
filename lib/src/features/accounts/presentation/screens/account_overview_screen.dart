@@ -29,6 +29,7 @@ class _AccountOverviewScreenState extends State<AccountOverviewScreen>
         description: Text('Discover and manage users, roles and sessions.'),
       ),
       body: DefaultTabController(
+        animationDuration: const Duration(milliseconds: 0),
         initialIndex: getInitialIndex(),
         length: 2,
         child: Container(
