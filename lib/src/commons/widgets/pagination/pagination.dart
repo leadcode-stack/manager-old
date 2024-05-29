@@ -61,15 +61,24 @@ class _PaginationNavigatorState<T>
     return Row(
       children: [
         IconButton(
-          icon: Icon(Icons.arrow_back_ios),
+          icon: const Icon(Icons.arrow_back_ios),
+          tooltip: 'Previous page',
+          color: _page > 1 ? null : Colors.grey.shade300,
+          iconSize: 20,
           onPressed: () {
             if (_page > 1) {
               previousPage(context, _page - 1);
             }
           },
         ),
+        const SizedBox(width: 8),
+        Text('${widget.pagination.meta.currentPage}'),
+        const SizedBox(width: 8),
         IconButton(
-          icon: Icon(Icons.arrow_forward_ios),
+          icon: const Icon(Icons.arrow_forward_ios),
+          tooltip: 'Next page',
+          color: _page < widget.pagination.meta.lastPage ? null : Colors.grey.shade300,
+          iconSize: 20,
           onPressed: () {
             if (_page < widget.pagination.meta.lastPage) {
               nextPage(context, _page + 1);
