@@ -25,11 +25,10 @@ class _UserOverviewScreenState extends ConsumerState<UserOverviewScreen>
 
     int getInitialIndex(User user) => switch (GoRouterState.of(context).matchedLocation) {
       final path when path.startsWith('/accounts/users/${user.id}/overview') => 0,
-      final path when path.startsWith('/accounts/users/${user.id}/roles') => 1,
-      final path when path.startsWith('/accounts/users/${user.id}/articles') => 2,
-      final path when path.startsWith('/accounts/users/${user.id}/preferences') => 3,
-      final path when path.startsWith('/accounts/users/${user.id}/sessions') => 4,
-      final path when (auth.user?.id != user.id) && path.startsWith('/accounts/users/${user.id}/danger-zone') => 5,
+      final path when path.startsWith('/accounts/users/${user.id}/articles') => 1,
+      final path when path.startsWith('/accounts/users/${user.id}/preferences') => 2,
+      final path when path.startsWith('/accounts/users/${user.id}/sessions') => 3,
+      final path when (auth.user?.id != user.id) && path.startsWith('/accounts/users/${user.id}/danger-zone') => 4,
       _ => 0,
     };
 
@@ -46,7 +45,8 @@ class _UserOverviewScreenState extends ConsumerState<UserOverviewScreen>
           ),
           body: DefaultTabController(
             initialIndex: getInitialIndex(user),
-            length: user.id != auth.user?.id ? 6 : 5,
+            length: user.id != auth.user?.id ? 5 : 4,
+            animationDuration: Duration.zero,
             child: Container(
                 color: Colors.grey.shade200,
                 child: Column(
@@ -61,17 +61,15 @@ class _UserOverviewScreenState extends ConsumerState<UserOverviewScreen>
                           onTap: (index) {
                             return switch (index) {
                               0 => context.go('/accounts/users/${user.id}/overview'),
-                              1 => context.go('/accounts/users/${user.id}/roles'),
-                              2 => context.go('/accounts/users/${user.id}/articles'),
-                              3 => context.go('/accounts/users/${user.id}/preferences'),
-                              4 => context.go('/accounts/users/${user.id}/sessions'),
-                              5 => context.go('/accounts/users/${user.id}/danger-zone'),
+                              1 => context.go('/accounts/users/${user.id}/articles'),
+                              2 => context.go('/accounts/users/${user.id}/preferences'),
+                              3 => context.go('/accounts/users/${user.id}/sessions'),
+                              4 => context.go('/accounts/users/${user.id}/danger-zone'),
                               _ => 0,
                             };
                           },
                           tabs: [
                             const Tab(text: 'Profile'),
-                            const Tab(text: 'Roles'),
                             const Tab(text: 'Articles'),
                             const Tab(text: 'Preferences'),
                             const Tab(text: 'Sessions'),
@@ -86,9 +84,6 @@ class _UserOverviewScreenState extends ConsumerState<UserOverviewScreen>
                     Expanded(
                       child: TabBarView(children: [
                         UserProfileScreen(user: user),
-                        const Center(
-                          child: Text('Current Roles'),
-                        ),
                         const Center(
                           child: Text('Articles'),
                         ),

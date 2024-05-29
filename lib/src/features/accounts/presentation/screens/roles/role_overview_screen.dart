@@ -5,6 +5,7 @@ import 'package:manager/src/commons/widgets/resource_bars/overview_app_bar.dart'
 import 'package:manager/src/features/accounts/data/models/role.dart';
 import 'package:manager/src/features/accounts/domain/controllers/role_controller.dart';
 import 'package:manager/src/features/accounts/presentation/screens/roles/role_edit_screen.dart';
+import 'package:manager/src/features/accounts/presentation/screens/roles/role_permissions_screen.dart';
 
 final class RoleOverviewScreen extends ConsumerStatefulWidget {
   final int id;
@@ -22,7 +23,6 @@ class _RoleOverviewScreenState extends ConsumerState<RoleOverviewScreen>
   Widget build(BuildContext context) {
     final state = ref.watch(roleControllerProvider(widget.id));
 
-    print('loc : ${GoRouterState.of(context).path}');
     return state.when(
       error: (e, _) => Center(child: Text(e.toString())),
       loading: () => const Center(
@@ -56,7 +56,7 @@ class _RoleOverviewScreenState extends ConsumerState<RoleOverviewScreen>
                           onTap: (index) {
                             return switch (index) {
                               0 => context.go('/accounts/roles/${role.id}/overview'),
-                              1 => context.go('/accounts/roles/${role.id}/permissions'),
+                              1 => context.go('/accounts/roles/${role.id}/permissions?page=1&limit=10'),
                               2 => context.go('/accounts/roles/${role.id}/danger-zone'),
                               _ => 0,
                             };
@@ -74,9 +74,7 @@ class _RoleOverviewScreenState extends ConsumerState<RoleOverviewScreen>
                     Expanded(
                       child: TabBarView(children: [
                         RoleEditScreen(role: role),
-                        const Center(
-                          child: Text('Edit permission'),
-                        ),
+                        RolePermissionsScreen(role: role),
                         const Center(
                           child: Text('Danger zone'),
                         ),

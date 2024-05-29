@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:manager/src/commons/utils/pagination.dart';
+import 'package:manager/src/commons/utils/pagination_navigator.dart';
 import 'package:manager/src/features/accounts/data/models/role.dart';
 import 'package:manager/src/features/accounts/data/repositories/role_repository.dart';
 

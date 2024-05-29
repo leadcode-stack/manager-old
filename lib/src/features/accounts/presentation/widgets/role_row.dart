@@ -60,6 +60,7 @@ class RoleRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ListTile(
+      onTap: () => context.go('/accounts/roles/${role.id}/overview'),
       title: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
         Text(role.name),
         const SizedBox(width: 10),
@@ -68,7 +69,7 @@ class RoleRow extends ConsumerWidget {
           height: 15.0,
           decoration: BoxDecoration(
             color:
-            Color(int.parse('0xFF${role.textColor.replaceFirst('#', '')}')),
+                Color(int.parse('0xFF${role.textColor.replaceFirst('#', '')}')),
             shape: BoxShape.circle,
           ),
         ),
@@ -85,34 +86,6 @@ class RoleRow extends ConsumerWidget {
       ]),
       subtitle: Text('${role.permissions.length} permissions',
           style: const TextStyle(color: Colors.grey, fontSize: 12.0)),
-      trailing: PopupMenuButton<int>(
-        tooltip: '',
-        color: Colors.white,
-        icon: const Icon(Icons.more_vert),
-        itemBuilder: (context) =>
-        [
-          PopupMenuItem(
-            onTap: () => context.go('/accounts/roles/${role.id}/overview'),
-            child: const Row(
-              children: [
-                Icon(Icons.edit),
-                SizedBox(width: 8),
-                Text('Edit'),
-              ],
-            ),
-          ),
-          PopupMenuItem(
-            onTap: () => handleDelete(context, ref),
-            child: const Row(
-              children: [
-                Icon(Icons.delete, color: Colors.red),
-                SizedBox(width: 8),
-                Text('Delete'),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

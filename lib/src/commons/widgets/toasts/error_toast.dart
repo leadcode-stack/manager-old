@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:toastification/toastification.dart';
 
 void createErrorToast(BuildContext context,
-        {required String label,
+        {String label = 'Error',
         String? description,
         Duration? duration = const Duration(seconds: 5)}) =>
     Future.delayed(

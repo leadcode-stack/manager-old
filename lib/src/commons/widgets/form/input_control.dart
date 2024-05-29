@@ -7,6 +7,7 @@ final class InputControl extends StatelessWidget {
   final void Function(String)? onChanged;
   final void Function(String?)? onSaved;
   final String? Function(String?)? validator;
+  final double? width;
 
   const InputControl(
       {required this.formKey,
@@ -15,12 +16,14 @@ final class InputControl extends StatelessWidget {
       this.onChanged,
       this.onSaved,
       this.validator,
+      this.width,
       super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.only(bottom: 10.0),
+      width: width,
       child: ConstrainedBox(
         constraints: const BoxConstraints(minWidth: 300),
         child: IntrinsicWidth(

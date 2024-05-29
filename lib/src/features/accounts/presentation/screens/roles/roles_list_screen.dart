@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:manager/src/commons/utils/pagination.dart';
+import 'package:manager/src/commons/utils/pagination_navigator.dart';
 import 'package:manager/src/features/accounts/data/models/role.dart';
 import 'package:manager/src/features/accounts/domain/controllers/role_controller.dart';
 import 'package:manager/src/features/accounts/presentation/forms/store_role_form.dart';
@@ -11,18 +11,18 @@ final class RolesListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<Pagination<Role>> state = ref.watch(rolesControllerProvider);
+    final AsyncValue<Pagination<Role>> state =
+        ref.watch(rolesControllerProvider);
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.indigo,
-        child: const Icon(Icons.add, color: Colors.white),
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => const StoreRoleForm()
-          );
-        }),
+        floatingActionButton: FloatingActionButton(
+            backgroundColor: Colors.indigo,
+            child: const Icon(Icons.add, color: Colors.white),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) => const StoreRoleForm());
+            }),
         body: Container(
             padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
             color: Colors.grey.shade200,
@@ -33,8 +33,10 @@ final class RolesListScreen extends ConsumerWidget {
                   color: Colors.white,
                 ),
                 child: state.when(
-                    data: (pagination) => ListView.builder(
+                    data: (pagination) => ListView.separated(
                           itemCount: pagination.data.length,
+                      separatorBuilder: (context, index) =>
+                              Divider(height: 1.0, color: Colors.grey.shade200),
                           itemBuilder: (context, index) {
                             final role = pagination.data[index];
                             return RoleRow(role: role);

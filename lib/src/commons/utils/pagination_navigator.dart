@@ -1,4 +1,4 @@
-final class Pagination<T> {
+class Pagination<T> {
   final Metadata meta;
   final List<T> data;
 

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:manager/src/application/preferences/shared_preferences.dart';
-import 'package:manager/src/commons/utils/pagination.dart';
+import 'package:manager/src/commons/utils/pagination_navigator.dart';
 import 'package:manager/src/constants/http.dart';
 import 'package:manager/src/features/accounts/data/models/user.dart';
 

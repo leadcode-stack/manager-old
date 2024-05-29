@@ -7,7 +7,6 @@ import 'package:manager/src/commons/widgets/toasts/error_toast.dart';
 import 'package:manager/src/features/accounts/domain/controllers/user_controller.dart';
 import 'package:manager/src/features/accounts/data/models/user.dart';
 import 'package:manager/src/commons/widgets/toasts/success_toast.dart';
-import 'package:manager/src/features/authentication/data/models/auth.dart';
 
 class UserRow extends ConsumerWidget {
   final User user;
@@ -56,25 +55,20 @@ class UserRow extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final auth = ref.watch(authProvider);
-
     return ListTile(
       title: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
         Text('${user.firstname} ${user.lastname}'),
         const SizedBox(width: 10),
         Row(
             children: user.roles
-                .map((role) => Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    margin: const EdgeInsets.only(right: 4),
-                    decoration: BoxDecoration(
-                      color: stringToColor(role.backgroundColor),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(role.name,
-                        style: TextStyle(
-                            color: stringToColor(role.textColor),
-                            fontSize: 12.0))))
+                .map((role) => Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: Badge(
+                          label: Text(role.name),
+                          textColor: stringToColor(role.textColor),
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          backgroundColor: stringToColor(role.backgroundColor)),
+                    ))
                 .toList()),
       ]),
       subtitle: Text(user.email,
@@ -86,34 +80,7 @@ class UserRow extends ConsumerWidget {
               height: 40,
               'https://ui-avatars.com/api/?name=${user.firstname}+${user.lastname}',
               fit: BoxFit.cover)),
-      trailing: PopupMenuButton<int>(
-        tooltip: '',
-        color: Colors.white,
-        icon: const Icon(Icons.more_vert),
-        itemBuilder: (context) => [
-          PopupMenuItem(
-            onTap: () => context.go('/accounts/users/${user.id}/overview'),
-            child: const Row(
-              children: [
-                Icon(Icons.edit),
-                SizedBox(width: 8),
-                Text('Edit'),
-              ],
-            ),
-          ),
-          if (user.id != auth.user?.id)
-            PopupMenuItem(
-              onTap: () => handleDelete(context, ref),
-              child: const Row(
-                children: [
-                  Icon(Icons.delete, color: Colors.red),
-                  SizedBox(width: 8),
-                  Text('Delete'),
-                ],
-              ),
-            ),
-        ],
-      ),
+      onTap: () => context.go('/accounts/users/${user.id}/overview'),
     );
   }
 }
