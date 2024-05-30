@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:manager/src/routing/navigation_rail_items.dart';
 
-class ScaffoldNavigationRail extends StatelessWidget {
+class ScaffoldNavigationRail extends StatefulWidget {
   final Widget body;
   final int selectedIndex;
   final ValueChanged<int> onDestinationSelected;
@@ -12,6 +12,13 @@ class ScaffoldNavigationRail extends StatelessWidget {
     required this.selectedIndex,
     required this.onDestinationSelected,
   });
+
+  @override
+  State<ScaffoldNavigationRail> createState() => _ScaffoldNavigationRailState();
+}
+
+class _ScaffoldNavigationRailState extends State<ScaffoldNavigationRail> {
+  bool isExtended = false;
 
   @override
   Widget build(BuildContext context) {
@@ -30,36 +37,50 @@ class ScaffoldNavigationRail extends StatelessWidget {
                 indicatorShape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
+                extended: isExtended,
                 backgroundColor: Colors.white,
-                selectedIndex: selectedIndex,
-                onDestinationSelected: onDestinationSelected,
-                labelType: NavigationRailLabelType.all,
+                selectedIndex: widget.selectedIndex,
+                onDestinationSelected: widget.onDestinationSelected,
                 leading: Container(
                     padding: const EdgeInsets.only(bottom: 20),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image.network(
-                            'https://avatars.githubusercontent.com/u/105711639?s=200&v=4',
-                            width: 50,
-                            height: 50))),
+                    child: _buildCompanyLogo()),
                 trailing: Expanded(
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.grey.shade400,
-                          radius: 20,
-                        )),
+                    child: _buildToggleExtendedButton(),
                   ),
                 ),
                 destinations: railDestinations),
           ),
           Expanded(
-            child: body,
+            child: widget.body,
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildCompanyLogo() {
+    return Container(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: ClipRRect(
+          borderRadius: BorderRadius.circular(8.0),
+          child: Image.network(
+              'https://avatars.githubusercontent.com/u/105711639?s=200&v=4',
+              width: 50,
+              height: 50)),
+    );
+  }
+
+  Widget _buildToggleExtendedButton() {
+    return Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: ElevatedButton(
+          onPressed: () {
+            setState(() => isExtended = !isExtended);
+          },
+          child:
+          Icon(isExtended ? Icons.arrow_back_ios : Icons.arrow_forward_ios),
+        ));
   }
 }

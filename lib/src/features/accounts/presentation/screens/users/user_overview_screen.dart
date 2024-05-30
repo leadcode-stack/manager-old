@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:manager/src/commons/widgets/resource_bars/overview_app_bar.dart';
-import 'package:manager/src/features/accounts/domain/controllers/user_controller.dart';
+import 'package:manager/src/commons/widgets/ui/resource_tab_layout.dart';
 import 'package:manager/src/features/accounts/data/models/user.dart';
+import 'package:manager/src/features/accounts/domain/controllers/user_controller.dart';
 import 'package:manager/src/features/accounts/presentation/screens/users/user_profile_screen.dart';
 import 'package:manager/src/features/authentication/data/models/auth.dart';
 
@@ -23,85 +23,50 @@ class _UserOverviewScreenState extends ConsumerState<UserOverviewScreen>
     final auth = ref.watch(authProvider);
     final state = ref.watch(userControllerProvider(widget.id));
 
-    int getInitialIndex(User user) => switch (GoRouterState.of(context).matchedLocation) {
-      final path when path.startsWith('/accounts/users/${user.id}/overview') => 0,
-      final path when path.startsWith('/accounts/users/${user.id}/articles') => 1,
-      final path when path.startsWith('/accounts/users/${user.id}/preferences') => 2,
-      final path when path.startsWith('/accounts/users/${user.id}/sessions') => 3,
-      final path when (auth.user?.id != user.id) && path.startsWith('/accounts/users/${user.id}/danger-zone') => 4,
-      _ => 0,
-    };
-
     return state.when(
-      error: (e, __) => Center(child: Text(e.toString())),
-      loading: () => const Center(
-        child: CircularProgressIndicator(),
-      ),
-      data: (User user) => Scaffold(
-          appBar: OverviewAppBar(
-            title: user.username,
-            description:
-                const Text('Discover and manage user, roles and sessions.'),
-          ),
-          body: DefaultTabController(
-            initialIndex: getInitialIndex(user),
-            length: user.id != auth.user?.id ? 5 : 4,
-            animationDuration: Duration.zero,
-            child: Container(
-                color: Colors.grey.shade200,
-                child: Column(
-                  children: [
-                    Container(
-                      color: Colors.white,
-                      child: TabBar(
-                          isScrollable: true,
-                          labelColor: Colors.blue.shade400,
-                          indicatorColor: Colors.blue.shade400,
-                          dividerColor: Colors.grey.shade200,
-                          onTap: (index) {
-                            return switch (index) {
-                              0 => context.go('/accounts/users/${user.id}/overview'),
-                              1 => context.go('/accounts/users/${user.id}/articles'),
-                              2 => context.go('/accounts/users/${user.id}/preferences'),
-                              3 => context.go('/accounts/users/${user.id}/sessions'),
-                              4 => context.go('/accounts/users/${user.id}/danger-zone'),
-                              _ => 0,
-                            };
-                          },
-                          tabs: [
-                            const Tab(text: 'Profile'),
-                            const Tab(text: 'Articles'),
-                            const Tab(text: 'Preferences'),
-                            const Tab(text: 'Sessions'),
-                            if (user.id != auth.user?.id)
-                              const Tab(
-                                  child: Text(
-                                'Danger zone',
-                                style: TextStyle(color: Colors.red),
-                              )),
-                          ]),
-                    ),
-                    Expanded(
-                      child: TabBarView(children: [
-                        UserProfileScreen(user: user),
-                        const Center(
-                          child: Text('Articles'),
-                        ),
-                        const Center(
-                          child: Text('Preferences'),
-                        ),
-                        const Center(
-                          child: Text('Sessions'),
-                        ),
-                        if (user.id != auth.user?.id)
-                          const Center(
-                            child: Text('Danger zone'),
-                          ),
-                      ]),
-                    ),
-                  ],
-                )),
-          )),
-    );
+        error: (e, __) => Center(child: Text(e.toString())),
+        loading: () => const Center(
+              child: CircularProgressIndicator(),
+            ),
+        data: (User user) => Scaffold(
+            appBar: OverviewAppBar(
+              title: user.username,
+              description:
+                  const Text('Discover and manage user, roles and sessions.'),
+            ),
+            body: ResourceTabLayout(
+              resources: [
+                ResourceTab(
+                    label: const Text('Overview'),
+                    path: '/accounts/users/${user.id}/overview',
+                    child: UserProfileScreen(user: user)),
+                ResourceTab(
+                    label: const Text('Articles'),
+                    path: '/accounts/users/${user.id}/articles',
+                    child: const Center(
+                      child: Text('Articles'),
+                    )),
+                ResourceTab(
+                    label: const Text('Preferences'),
+                    path: '/accounts/users/${user.id}/preferences',
+                    child: const Center(
+                      child: Text('Preferences'),
+                    )),
+                ResourceTab(
+                    label: const Text('Sessions'),
+                    path: '/accounts/users/${user.id}/sessions',
+                    child: const Center(
+                      child: Text('Sessions'),
+                    )),
+                ResourceTab(
+                    label: const Text('Danger zone',
+                        style: TextStyle(color: Colors.red)),
+                    path: '/accounts/users/${user.id}/danger-zone',
+                    visible: user.id != auth.user?.id,
+                    child: const Center(
+                      child: Text('Danger zone'),
+                    )),
+              ],
+            )));
   }
 }

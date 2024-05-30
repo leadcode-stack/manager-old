@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manager/src/commons/widgets/frame.dart';
 import 'package:manager/src/commons/widgets/pagination/pagination.dart';
+import 'package:manager/src/commons/widgets/pagination/search_bar.dart';
 import 'package:manager/src/commons/widgets/toasts/error_toast.dart';
 import 'package:manager/src/commons/widgets/toasts/success_toast.dart';
 import 'package:manager/src/features/accounts/data/models/permission.dart';
@@ -10,9 +11,11 @@ import 'package:manager/src/features/accounts/domain/controllers/permission_cont
 import 'package:manager/src/features/accounts/domain/controllers/role_controller.dart';
 
 final class RolePermissionsScreen extends ConsumerStatefulWidget {
+  final PageSchema pageSchema;
   final Role role;
 
-  const RolePermissionsScreen({required this.role, super.key});
+  const RolePermissionsScreen(
+      {required this.pageSchema, required this.role, super.key});
 
   @override
   ConsumerState<RolePermissionsScreen> createState() =>
@@ -56,14 +59,10 @@ class _RolePermissionsScreenState extends ConsumerState<RolePermissionsScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(permissionsController);
-    final rolePermissionIds =
-        widget.role.permissions.map((permission) => permission.id).toList();
 
     return state.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) {
-        return Center(child: Text(stack.toString()));
-      },
+      error: (error, stack) => Center(child: Text(stack.toString())),
       data: (permissions) {
         return Container(
           color: Colors.grey.shade200,
@@ -72,28 +71,8 @@ class _RolePermissionsScreenState extends ConsumerState<RolePermissionsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Permissions',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                Expanded(
-                  child: ListView.separated(
-                    itemCount: permissions.data.length,
-                    separatorBuilder: (context, index) =>
-                        Divider(height: 1.0, color: Colors.grey.shade200),
-                    itemBuilder: (context, index) {
-                      final permission = permissions.data[index];
-                      return CheckboxListTile(
-                        title: Text(permission.name),
-                        subtitle: Text(permission.description ?? ''),
-                        value: rolePermissionIds.contains(permission.id),
-                        controlAffinity: ListTileControlAffinity.leading,
-                        onChanged: (bool? value) =>
-                            handleChangePermission(permission, value!),
-                      );
-                    },
-                  ),
-                ),
+                _buildHeading(),
+                _buildBody(permissions.data),
                 PaginationNavigator<Permission>(
                   pagination: permissions,
                 ),
@@ -102,6 +81,44 @@ class _RolePermissionsScreenState extends ConsumerState<RolePermissionsScreen> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildHeading() {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            'Permissions',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        ),
+        Search(notifier: permissionsController.notifier)
+      ],
+    );
+  }
+
+  Widget _buildBody(List<Permission> permissions) {
+    final rolePermissionIds =
+        widget.role.permissions.map((permission) => permission.id).toList();
+
+    return Expanded(
+      child: ListView.separated(
+        itemCount: permissions.length,
+        separatorBuilder: (context, index) =>
+            Divider(height: 1.0, color: Colors.grey.shade200),
+        itemBuilder: (context, index) {
+          final permission = permissions[index];
+          return CheckboxListTile(
+            title: Text(permission.name),
+            subtitle: Text(permission.description ?? ''),
+            value: rolePermissionIds.contains(permission.id),
+            controlAffinity: ListTileControlAffinity.leading,
+            onChanged: (bool? value) =>
+                handleChangePermission(permission, value!),
+          );
+        },
+      ),
     );
   }
 }

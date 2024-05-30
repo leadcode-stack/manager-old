@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:manager/src/commons/utils/pagination_controller.dart';
 import 'package:manager/src/commons/utils/pagination_navigator.dart';
+import 'package:manager/src/commons/widgets/pagination/pagination.dart';
 import 'package:manager/src/features/accounts/data/models/permission.dart';
 import 'package:manager/src/features/accounts/data/repositories/permission_repository.dart';
 
@@ -11,23 +12,14 @@ final class PermissionsController
     with PaginationController<Permission> {
   @override
   Future<Pagination<Permission>> build() async {
-    final params = Uri.base.queryParameters;
     final permissionRepository = ref.read(permissionRepositoryProvider);
-
-    return permissionRepository.getPermissions(
-      page: int.tryParse(params['page'] ?? '') ?? 1,
-      limit: int.tryParse(params['limit'] ?? '') ?? 10,
-    );
+    return permissionRepository.getPermissions(null);
   }
 
   @override
-  Future<Pagination<Permission>> paginate(int page, int limit) async {
+  Future<Pagination<Permission>> paginate(PageSchema schema) async {
     final permissionRepository = ref.read(permissionRepositoryProvider);
-
-    return permissionRepository.getPermissions(
-      page: page,
-      limit: limit,
-    );
+    return permissionRepository.getPermissions(schema);
   }
 }
 
